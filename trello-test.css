@@ -1,0 +1,55 @@
+/*csslint ids: false */
+body {
+    font-family: arial;
+    font-size: 12px;
+}
+
+#loggedout {
+    font-size: 20px;
+    padding-top: 30px;
+    text-align: center;
+}
+
+#loggedin {
+    display: none;
+}
+
+#header {
+    background: #eee;
+    border-bottom: 1px solid #000;
+    padding: 4px;
+}
+
+#output {
+    padding: 4px;
+}
+
+.card {
+    display: block;
+    padding: 2px;
+}
+
+.board {
+    display: block;
+    padding: 2px;
+}
+
+.marked {
+    color: red;
+}
+
+.selectboard:hover{
+    background-color: yellow;
+}
+
+.Checking{
+    background-color: pink;
+}
+
+.Doing{
+    background-color: lightyellow;
+}
+
+.Done{
+    background-color: lightgreen;
+}
