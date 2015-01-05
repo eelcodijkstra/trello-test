@@ -3,3 +3,5 @@
 # Example .gitignore files: https://github.com/github/gitignore
 trello-local.js
 gitarchive
+regexptest.txt
+fragments.js
