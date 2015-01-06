@@ -74,7 +74,7 @@ function getBoardLists(boards) {
 
 function renderBoards(brds) {
   console.log("render boards");
-  dust.render("templ1", {boards: brds, title: "boards"}, function (err, out) {
+  dust.render("templ6", {boards: brds, title: "boards"}, function (err, out) {
     $("#boards").append(out);
   });
 }
@@ -285,3 +285,10 @@ var templ3 = '{#cards}<li><a href="{url}" target="trello" {?xmark}class="marked"
     + '{$idx} - {name}</a></li>{~n}{/cards}';
 var cardsTemplate = dust.compile(templ3, "templ3");
 dust.loadSource(cardsTemplate);
+
+var templ6 = '<table><thead><tr><td></td><td>Board</td><td>Select actions</td</tr></thead>{~n}'
+    + '{#boards}<tr ><td>{$idx}</td>'
+    + '<td><a href="{url}" target="trello">{name}</a></td>'
+    + '<td id="board-{$idx}" class="selectboard">{name}</td></tr>{~n}'
+    + '{/boards}</table>';
+dust.loadSource(dust.compile(templ6, "templ6"));

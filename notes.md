@@ -126,7 +126,9 @@ What is needed for first demo-version of the different tests?
 
 ### 6-jan-2015
 
-* trello-test2: added board-counters in move-list; reverse order of move-list (sort);
+* trello-test2: 
+    * [x] add board-counters in move-list; reverse order of move-list (sort);
+    * [ ] copy board: get board counters from original board.
 
 #### CSS Lint issues
 
@@ -328,4 +330,4 @@ d3.js: see basic techniques
 
 ### On Google Drive
 
-* [trello-test](https://0c13f9e0dfcf41986f91f75702c02e604e326970.googledrive.com/host/0B4Wf_Tca5KDueDZMQXllcE1kazA/trello-test.html)
+* [trello-test0](https://googledrive.com/host/0B4Wf_Tca5KDuSm02bkFqaWJnZWM/trello-test0.html)
