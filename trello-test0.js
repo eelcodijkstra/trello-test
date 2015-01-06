@@ -163,6 +163,7 @@ Trello.setKey(trelloAppKey);
 
 Trello.authorize({
   interactive: false,
+  name: "ICTidW test 0",
   expiration: "1hour",
   success: onAuthorize
 });
@@ -171,6 +172,7 @@ $("#connectLink")
   .click(function () {
     Trello.authorize({
       type: "popup",
+      name: "ICTidW test 0",
       expiration: "1hour",
       success: onAuthorize
     });
