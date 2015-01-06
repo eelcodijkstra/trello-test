@@ -129,6 +129,9 @@ What is needed for first demo-version of the different tests?
 * trello-test2: 
     * [x] add board-counters in move-list; reverse order of move-list (sort);
     * [ ] copy board: get board counters from original board.
+* trello boards etc. in iframe (e.g., in a MW widget):
+    * this can only be done for public boards - which makes it less relevant for our case
+    * see e.g. http://jsfiddle.net/danlec/hmQJP/
 
 #### CSS Lint issues
 
@@ -312,6 +315,15 @@ The information in the actions of a board is quite complete: it allows for a com
 * http://kevinpelgrims.com/blog/2012/03/06/project-progress-tracking-with-google-docs-and-trello
 * http://www.littlebluemonkey.com/blog/add-enhanced-workflow-to-trello
 * http://handsontable.com/index.html
+
+### Promises
+
+* http://www.html5rocks.com/en/tutorials/es6/promises/#toc-parallelism-sequencing
+
+### Templates
+
+* dust: http://linkedin.github.io/dustjs/test/test.html
+
 
 ### Visualization
 
