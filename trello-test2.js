@@ -171,12 +171,20 @@ function displayActions(actions) {
 function displayMoves(actions) {
   var html = $("<ul>"),
     str = "",
+    movesBoard = {Backlog: 20, Todo: 0, Doing: 0, Checking: 0, Done: 0},
     moves = actions.filter(filterListMoves);
+  moves.sort(function (m0, m1) {
+    return Date.parse(m0.date) - Date.parse(m1.date);
+  });
+
   moves.forEach(function (act) {
+    movesBoard[act.data.listBefore.name] -= 1;
+    movesBoard[act.data.listAfter.name] += 1;
     str = "at: " + act.date
       + " card: " + act.data.card.name
       + " from: " + act.data.listBefore.name
       + " to " + act.data.listAfter.name;
+    str = str + " ... " + JSON.stringify(movesBoard);
     $("<li>").append(str).appendTo(html);
   });
   return html;

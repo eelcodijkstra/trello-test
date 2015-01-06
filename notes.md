@@ -120,8 +120,13 @@ What is needed for first demo-version of the different tests?
 
 * [x] trello-test0: publish (e.g., in Google Drive)
 * [ ] trello-test1: better presentation of original boards and derived boards; selection of original board;
+    * [x] first step: table-representation of board list.
 * [ ] trello-test2:
 * [x] public version on GitHub
+
+### 6-jan-2015
+
+* trello-test2: added board-counters in move-list; reverse order of move-list (sort);
 
 #### CSS Lint issues
 
