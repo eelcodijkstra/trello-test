@@ -231,7 +231,7 @@ function selectBoard(board) {
     row = $('<td>');
 
   board.xcards.forEach(function (card) {
-    if (card.name.match(/^Les/)) {
+    if (card.name.match(/^Les/) || card.name.match(/^Opdracht/)) {
       column[card.name] = displayBoard.length;
       displayBoard.push({title: card.name, cards: [card]});
     }

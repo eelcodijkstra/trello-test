@@ -121,7 +121,7 @@ What is needed for first demo-version of the different tests?
 * [x] trello-test0: publish (e.g., in Google Drive)
 * [ ] trello-test1: better presentation of original boards and derived boards; selection of original board;
 * [ ] trello-test2:
-* [ ] public version on GitHub
+* [x] public version on GitHub
 
 #### CSS Lint issues
 
@@ -137,13 +137,14 @@ There should be no spaces between `/*`  and `csslint`.
 ## ToDo
 
 * [ ] store user token (first in localStorage)
-* [ ] store multiple user tokens (in localStorage)
+* [x] store multiple user tokens (in localStorage)
+    * not necessary: access via board membership.
 * [ ] internal mapping between id and object (and v.v.)
-* [ ] local cache, using update-times of boards (etc.)
+* [x] local cache, using update-times of boards (etc.)
 * [ ] develop a way of working for modules in Trello, and its display (for students and for teachers).
 * [ ] possibility to refresh the board-listing with re-selecting.
 * [ ] use of labels to mark cards (e.g., when stuck)
-* [ ] find admin-member of board; indicate in special column (in general: student)
+* [x] find admin-member of board; indicate in special column (in general: student)
 
 ## Scenario's
 
@@ -284,6 +285,20 @@ The information in the actions of a board is quite complete: it allows for a com
 > This is another approach than taken by XXX: in that case, a regular sampling of the board takes place.
 
 
+## Conventions
+
+* the description of a board is given by the description (`desc`) of a card named `About`.
+    * Trello does not have an option to add a description to a board; this use of a special card aims to address this.
+    * Usually, this card is the first card on a board: first position in the first column. For the software, only the name of the card is relevant, not its position.
+* the description of a board (on the card `About`) may contain a link to the original board, from which this board is copied ("Copy Board"). This link is represented as a Markdown link, with `Original` as label: `[Original](...url of original board...)`.
+    * the description of a board is in Markdown notation, similar to comments etc. on a card.
+* for the *module boards*, we use some special conventions:
+    * the template for the module is given by a special board;
+    * a student board is a copy of this template board (Copy Board);
+    * the `Original` link of a student board is made to refer to the module template;
+    * the module template board contains the lessons and tasks to be done as part of the module;
+    * the lessons and tasks are given by cards with names starting with `Les` or `Opdracht`.
+    * in the template, these cards should be placed in the list `Backlog`, the other lists must be empty.
 
 ## Other work
 
