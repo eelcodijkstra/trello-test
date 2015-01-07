@@ -72,6 +72,33 @@ function getBoardLists(boards) {
   return Promise.all(boardProms);
 }
 
+// get the number of elements in the different lists
+// not counting: About...
+function getBoardCounts(board) {
+  var listCount = [], listNames = [], taskList;
+  return promiseGet('boards/' + board.id + '/lists')
+    .then(function (lists) {
+      console.log('lists:' + JSON.stringify(lists));
+      lists.forEach(function (lst) {
+        listNames.push(lst.name);
+      });
+      var lst = lists.map(function (lst) {
+        return promiseGet('lists/' + lst.id + '/cards');
+      });
+      return Promise.all(lst);
+    }).then(function (lists) {
+      console.log('list-cards' + JSON.stringify(lists));
+
+      lists.forEach(function (lst, inx) {
+        var taskList = lst.filter(function (crd) {
+          return crd.name.match('^Les') || crd.name.match('^Opdracht');
+        });
+        listCount[inx] = taskList.length;
+      });
+      return {listNames: listNames, listCount: listCount};
+    });
+}
+
 function renderBoards(brds) {
   console.log("render boards");
   dust.render("templ6", {boards: brds, title: "boards"}, function (err, out) {
@@ -200,6 +227,12 @@ function selectBoard(board) {
       $("#moves")
         .empty()
         .append(displayMoves(actions));
+    }).then(function () {
+      getBoardCounts(board).then(function (lst) {
+        $('#listcount')
+          .empty()
+          .append(JSON.stringify(lst));
+      });
     });
 }
 

@@ -314,7 +314,10 @@ The information in the actions of a board is quite complete: it allows for a com
 
 * http://kevinpelgrims.com/blog/2012/03/06/project-progress-tracking-with-google-docs-and-trello
 * http://www.littlebluemonkey.com/blog/add-enhanced-workflow-to-trello
+* http://www.littlebluemonkey.com/blog/pimp-your-trello-cards/
 * http://handsontable.com/index.html
+* https://github.com/markdrago/cardorizer
+* https://docs.google.com/a/ictindewolken.nl/spreadsheet/ccc?key=0AoWf_Tca5KDudHY2emk0Xy1FZEtKLW5TekhJUE5zSHc&pli=1#gid=0
 
 ### Promises
 
