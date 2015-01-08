@@ -38,6 +38,12 @@ function promiseMembersGet(url) {
   });
 }
 
+function promiseValue(val) {
+  return new Promise(function (resolve, reject) {
+    resolve(val);
+  });
+}
+
 // get the cards of the lists
 // (problem: for what board(s)?) idBoard-field
 function getListCards(lists) {
@@ -74,9 +80,9 @@ function getBoardLists(boards) {
 
 // get the number of elements in the different lists
 // not counting: About...
-function getBoardCounts(board) {
+function getBoardCounts(boardId) {
   var listCount = [], listNames = [], taskList;
-  return promiseGet('boards/' + board.id + '/lists')
+  return promiseGet('boards/' + boardId + '/lists')
     .then(function (lists) {
       console.log('lists:' + JSON.stringify(lists));
       lists.forEach(function (lst) {
@@ -183,6 +189,10 @@ function displayAction(act) {
     str = " at: " + act.date + " by: " + act.memberCreator.fullName;
     str = str + " member.name: " + act.member.fullName + " initials: " + act.member.initials;
     html.append(str);
+  } else if (act.type === "copyBoard") {
+    str = " at: " + act.date + " by: " + act.memberCreator.fullName;
+    str = str + JSON.stringify(act);
+    html.append(str);
   } else {
     str = " at: " + act.date + " by: " + act.memberCreator.fullName;
     html.append(" <<<< " + str + " <<<< " + JSON.stringify(act, filterFields));
@@ -217,6 +227,72 @@ function displayMoves(actions) {
   return html;
 }
 
+function displayListChanges(actions) {
+
+  function actionString(act) {
+    return act.type + " at: " + act.date;
+  }
+
+  function copyBoardList(boardList) {
+    return {listNames: boardList.listNames.slice(), listCount: boardList.listCount.slice()};
+  }
+
+  function startList(firstAction) {
+    if (firstAction.type === 'createBoard') {
+      return promiseValue({listNames: [], listCount: []});
+    } else if (firstAction.type === 'copyBoard') {
+      return getBoardCounts(firstAction.data.boardSource.id);
+    } else {
+      return promiseValue({listNames: ['**Unknown**'], listCount: [100]});
+    }
+  }
+
+  if (actions.length === 0) {
+    return {board: {listNames: [], listCount: []}, str: ""}; // empty move list
+  }
+
+  actions.sort(function (m0, m1) {
+    return Date.parse(m0.date) - Date.parse(m1.date);
+  });
+
+  var firstAction = actions.shift();
+  console.log(">>>displayListChanges<<<" + " #actions:" + (actions.length + 1));
+
+  return startList(firstAction)
+    .then(function (boardList) {
+
+      function listIndex(nm) {
+        // console.log("index of " + nm + " " + boardList.listNames.indexOf(nm));
+        return boardList.listNames.indexOf(nm);
+      }
+
+      var moveList = [{board: copyBoardList(boardList), str: actionString(firstAction)}];
+      console.log("MoveList[0]: " + JSON.stringify(moveList));
+
+      actions.forEach(function (act, inx) {
+        console.log("action[" + inx + "]: " + act.type);
+        if (act.type === 'createList') {
+          boardList.listNames.push(act.data.list.name);
+          boardList.listCount.push(0);
+          moveList.push({board: copyBoardList(boardList), str: actionString(act)});
+        } else if (act.type === 'updateCard' && act.data.old !== undefined
+            && act.data.old.idList !== undefined) {
+          console.log("in update card");
+          console.log("boardList: " + JSON.stringify(boardList));
+          console.log("from: " + act.data.listBefore.name
+            + " index:" + listIndex(act.data.listBefore.name));
+          boardList.listCount[listIndex(act.data.listBefore.name)] -= 1;
+          boardList.listCount[listIndex(act.data.listAfter.name)] += 1;
+          moveList.push({board: copyBoardList(boardList), str: actionString(act)});
+        } else {
+          console.log("unknown action");
+        }
+        console.log("MoveList[" + (inx + 1) + "]: " + JSON.stringify(moveList));
+      });
+      return moveList;
+    });
+}
+
 function selectBoard(board) {
   console.log("select: " + board.name);
   promiseGet("boards/" + board.id + "/actions?limit=100")
@@ -227,12 +303,40 @@ function selectBoard(board) {
       $("#moves")
         .empty()
         .append(displayMoves(actions));
-    }).then(function () {
-      getBoardCounts(board).then(function (lst) {
+      return actions;
+    }).then(function (actions) {
+      getBoardCounts(board.id).then(function (lst) {
         $('#listcount')
           .empty()
           .append(JSON.stringify(lst));
-      });
+        /*
+        $('#listchanges')
+          .empty
+          .append(displayListChanges);
+        */
+        return actions;
+      }).then(displayListChanges)
+        .then(function (moves) {
+        /*
+          var html = $("<ul>");
+
+          moves.forEach(function (move) {
+            $("<li>")
+              .append(move.str + JSON.stringify(move.boardLists))
+              .appendTo(html);
+        */
+          var html = $("<ul>");
+
+          moves.forEach(function (mv) {
+            $("<li>")
+              .append(JSON.stringify(mv))
+              .appendTo(html);
+          });
+
+          $("#listchanges")
+            .empty()
+            .append(html);
+        });
     });
 }
 

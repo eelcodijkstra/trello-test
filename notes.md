@@ -133,6 +133,21 @@ What is needed for first demo-version of the different tests?
     * this can only be done for public boards - which makes it less relevant for our case
     * see e.g. http://jsfiddle.net/danlec/hmQJP/
 
+### 7-jan-2015
+
+* trello-test2:
+    * counting number of cards in lists.
+    
+Question: we do not want to count all elements in a list; currently, we filter only the "module" task cards, "Les..." and "Opdracht...".
+
+An alternative is to filter only the "About..." (and "Meta..."?) cards.
+
+### 8-jan-2015
+
+* trello-test2:
+    * first version of board configurations in time - based on card moves
+    * includes initial configuration, from `copyBoard` (configuration from template board).
+    
 #### CSS Lint issues
 
 CSS Lint complains about the use of IDs as selectors. I do not know of a global setting
