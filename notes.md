@@ -201,6 +201,16 @@ In order to check the progress of the students working on a module, the teacher 
 * by adding a teacher as "member" to a card, a student may indicate the need for interaction with the teacher on a subject: e.g., when stuck, when needing feedback, or when claiming a badge.
 
 
+#### Construct template board from spreadsheet
+
+Making a template board can be a significant effort. A lot of the information of a template board in on the back side of the cards: this information is only visible when checking each card separately.
+
+We propose therefor to construct a template board from a spreadsheet. It is much easier to have an overview over all elements in a spreadsheet, where everything is visible. It is also much easier to shuffle information around, e.g., change the order of some parts of the material.
+
+In order to construct a template board from a spreadsheet, we must use a number of conventions.
+
+(Note: the inverse, constructing a spreadsheet from a board, also makes sense: it may help to get an overview over the total board, in a way that is not possible in Trello.)
+
 ## Questions
 
 * [x] does a board have a description? If so, where to find this? (According to the API, a board has a description, but I cannot find it in the GUI.)
@@ -352,6 +362,7 @@ The information in the actions of a board is quite complete: it allows for a com
    * http://bl.ocks.org/mbostock/3886394 (normalized stacked bar chart)
    * http://bl.ocks.org/mbostock/5977197 (DRY bar chart)
 * http://bl.ocks.org/mbostock/4060954 (stream graphs)
+     https://github.com/mbostock/d3/wiki/Stack-Layout
 * http://bl.ocks.org/mbostock/3943967 (stacked bars)
 * http://bl.ocks.org/mbostock/4062085 (population pyramid)
 * http://metricsgraphicsjs.org/examples.htm (for time series)
