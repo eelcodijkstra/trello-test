@@ -148,6 +148,21 @@ An alternative is to filter only the "About..." (and "Meta..."?) cards.
     * first version of board configurations in time - based on card moves
     * includes initial configuration, from `copyBoard` (configuration from template board).
     
+### 10-jan-2015
+
+* trello-test3:
+    * first version of stacked histogram, with time basis (D3js)
+    
+Next step(s):
+
+* construct histogram-data from board-data
+    * bin per time-period, from status before, and actions inside the bin
+    * flexible time-periods
+    
+### 3-mar-2015
+
+* trello-test1: caching no OK: old data not replaced by recent changes.
+    
 #### CSS Lint issues
 
 CSS Lint complains about the use of IDs as selectors. I do not know of a global setting

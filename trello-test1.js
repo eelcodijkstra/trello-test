@@ -34,7 +34,9 @@ function emptyBoard(brd) {
 }
 
 function changedBoard(brd) {
-  return localStorage.getItem("saveTime") < new Date(brd.dateLastActivity).valueOf();
+  //console.log("changed? " + brd.name + " last act: " + brd.dateLastActivity);
+  //return localStorage.getItem("saveTime") < new Date(brd.dateLastActivity).valueOf();
+  return true;  // force fetching of actual board.
 }
 
 function saveObjects() {
