@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Trello test-4</title>
+    <link href="trello-test.css" rel="stylesheet" type="text/css">
+    <script src="trello-local.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://api.trello.com/1/client.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dustjs-linkedin/2.5.1/dust-full.js">
+    </script>
+  </head>
+  <body>
+    <h1>Trello test-4</h1>
+    <div id="loggedout">
+      <a id="connectLink" href="#">Connect To Trello</a>
+    </div>
+    <div id="loggedin">
+      <div id="header">
+        Logged in as <span id="fullName"></span>
+        <a id="disconnect" href="#">Log Out</a>
+      </div>
+      <h2>Organizations</h2>
+      <div id="organizations">
+        <select id="orgselector">
+          <option value="0"> ...select an organization ... </option>
+        </select>
+      </div>
+      <h2>Boards</h2>
+      <div id="boards"></div>
+      <h2>Progress</h2>
+      <div id="progressTable"></div>
+    </div>
+    <script src="trello-test4.js"></script>
+  </body>
+</html>

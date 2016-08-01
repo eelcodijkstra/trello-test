@@ -162,6 +162,12 @@ Next step(s):
 ### 3-mar-2015
 
 * trello-test1: caching no OK: old data not replaced by recent changes.
+* trello-test4.html:
+    * goal is to have first public version for teacher, tracking progress of a group (based on test1)
+    * default-organization: ICT in de Wolken. This may be changed by the user.
+    * then: present a set of *original boards* that may present progress
+    * boards have About card in first column (Backlog), refering to the board itself (using the orig-link).
+    * boards may have a set of *derived boards*: having the same About card in the first column, refering to the original board. (Usually, such a derived board is obtained from an original board, my making a copy - for each student.)
     
 #### CSS Lint issues
 
