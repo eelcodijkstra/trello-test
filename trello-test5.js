@@ -36,7 +36,11 @@ function emptyBoard(brd) {
 function changedBoard(brd) {
   //console.log("changed? " + brd.name + " last act: " + brd.dateLastActivity);
   //return localStorage.getItem("saveTime") < new Date(brd.dateLastActivity).valueOf();
-  return true;  // force fetching of actual board.
+  if (trelloObjects[brd.id]) {
+    return trelloObjects[brd.id].dateLastActivity !==  brd.dateLastActivity;
+  } else {
+    return true;
+  }
 }
 
 function saveObjects() {
