@@ -323,7 +323,7 @@ function makeMasterboardHandlers(boards) {
 
 function selectTemplate() {
   var idTempl = $("#templselector").val();
-  if (idTempl !== 0) {
+  if (idTempl !== "0") {
     var templ = trelloObjects[idTempl];
     selectBoard(templ);
   }
@@ -331,7 +331,7 @@ function selectTemplate() {
 
 function selectOrganization() {
   var idOrg = $("#orgselector").val();
-  if (idOrg !== 0) {
+  if (idOrg !== "0") {
     promiseGet("organizations/" + idOrg + "/members")
       .then(function (mbrs) {
         console.log("members: " + JSON.stringify(mbrs));
