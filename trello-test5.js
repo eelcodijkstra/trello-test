@@ -321,6 +321,14 @@ function makeMasterboardHandlers(boards) {
   });
 }
 
+function selectTemplate() {
+  var idTempl = $("#templselector").val();
+  if (idTempl !== 0) {
+    var templ = trelloObjects[idTempl];
+    selectBoard(templ);
+  }
+}
+
 function selectOrganization() {
   var idOrg = $("#orgselector").val();
   if (idOrg !== 0) {
@@ -348,6 +356,9 @@ function selectOrganization() {
         });
         makeMasterboardHandlers(masterboards);
         saveObjects();
+        dust.render("templ5", {templboards: masterboards}, function (err, out) {
+          $("#templselector").append(out);
+        });
         // alert("boards loaded" + JSON.stringify(boards));
       });
   }
@@ -474,6 +485,7 @@ $("#connectLink")
 
 $("#disconnect").click(logout);
 $("#orgselector").change(selectOrganization);
+$("#templselector").change(selectTemplate);
 
 var templ1 = '<ul>{~n}{#boards}<li id="board-{$idx}" class="selectboard">{$idx} - ' +
     '<a href="{url}" target="trello">{name}</a>' +
@@ -497,6 +509,11 @@ var templ4 = '{#orgs}<option value="{id}">' +
     '{displayName} ({name})' +
     '</option>{~n}{/orgs}';
 dust.loadSource(dust.compile(templ4, "templ4"));
+
+var templ5 = '{#templboards}<option value="{id}">' +
+    '{name}' +
+    '</option>{~n}{/templboards}';
+dust.loadSource(dust.compile(templ5, "templ5"));
 
 var templ6 = '<table style="border: 1px solid blue;"><thead><tr><td></td><td>Board</td><td>Original</td</tr></thead>{~n}' +
     '{#boards}<tr ><td>{$idx}</td>' +
