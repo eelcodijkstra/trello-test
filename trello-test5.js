@@ -333,9 +333,13 @@ function selectOrganization() {
         return promiseGet("members/me/boards");
       }).then(function (boards) {
         var newBoards = boards.map(function (brd, idx) {
-          if (changedBoard(brd) || trelloObjects[brd.id] === undefined) {
-            trelloObjects[brd.id] = brd;
+          if (trelloObjects[brd.id] === undefined) {
+            trelloObjects[brd.id] = brd; // register new board object
             brd.xcards = [];
+            brd.xlists = [];
+            brd.xtype = 'board';
+          } else if (changedBoard(brd)) { // keep existing board object
+            brd.cards = [];
             brd.xlists = [];
             brd.xtype = 'board';
           }
@@ -345,12 +349,12 @@ function selectOrganization() {
         return newBoards.filter(function (brd, idx) {
           return brd.idOrganization === idOrg;
         });
-      }).then(function (boards) {
-        dust.render("templ1", {boards: boards}, function (err, out) {
+      }).then(function (orgBoards) {
+        dust.render("templ1", {boards: orgBoards}, function (err, out) {
           $("#boards").empty();
           $("#boards").append(out);
         });
-        return boards;
+        return orgBoards;
       }).then(getListsAndCards)
       .then(function (boards) {
         dust.render("templ6", {boards: boards}, function (err, out) {
