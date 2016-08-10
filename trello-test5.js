@@ -11,7 +11,7 @@ See https://trello.com/docs for a list of available API URLs
 The API development board is at https://trello.com/api
 */
 
-var boardMap = [];
+var boardMap = []; // my boards ==> me.xboards
 var trelloObjects = {};
 var me;
 var $boards;
@@ -57,7 +57,7 @@ function getBoardFromUrl(url) {
 
 function getOriginal(board) {
   var urlOrig = board.shortUrl,
-    rexp = /\[Original\]\(([^)]*)\)/;
+      rexp = /\[Original\]\(([^)]*)\)/;
   if (board.xabout) {
     var match = rexp.exec(board.xabout.desc);
     if (match && match.length > 1) {
@@ -165,7 +165,7 @@ function markCards(cards) {
 }
 
 function getAdmin(board) {
-//  board.xadmin = trelloObjects[me.id];
+  //  board.xadmin = trelloObjects[me.id];
   board.memberships.forEach(function (mship) {
     if (mship.memberType === "admin") {
       board.xadmin = trelloObjects[mship.idMember];
@@ -184,33 +184,33 @@ function getListsAndCards(boards) {
     } else {
       return promiseGet("boards/" + board.id + "/lists")
         .then(function (lists) {
-          board.xlists = lists;
-          lists.forEach(function (list, inx) {
-            console.log("list: " + list.name);
-            list.xboard = board; // gives cyclic datastructure
-            list.xinx = inx;
-            list.xtype = 'list';
-            trelloObjects[list.id] = list;
-          });
-        }).then(function () {
-          return promiseGet("boards/" + board.id + "/cards")
-            .then(function (cards) {
-              board.xcards = cards;
-              cards.forEach(function (card, inx) {
-                card.xtype = 'card';
-                if (card.name === "About") {
-                  board.xabout = card;
-                }
-                card.xlist = trelloObjects[card.idList];
-                card.xinx = inx;
-                console.log("card(" + inx + "-" + card.xlist.name + "): " +
-                            card.name + " pos: " + card.pos);
-                trelloObjects[card.id] = card;
-              });
-              getOriginal(board);
-              return board;
-            });
+        board.xlists = lists;
+        lists.forEach(function (list, inx) {
+          console.log("list: " + list.name);
+          list.xboard = board; // gives cyclic datastructure
+          list.xinx = inx;
+          list.xtype = 'list';
+          trelloObjects[list.id] = list;
         });
+      }).then(function () {
+        return promiseGet("boards/" + board.id + "/cards")
+          .then(function (cards) {
+          board.xcards = cards;
+          cards.forEach(function (card, inx) {
+            card.xtype = 'card';
+            if (card.name === "About") {
+              board.xabout = card;
+            }
+            card.xlist = trelloObjects[card.idList];
+            card.xinx = inx;
+            console.log("card(" + inx + "-" + card.xlist.name + "): " +
+                        card.name + " pos: " + card.pos);
+            trelloObjects[card.id] = card;
+          });
+          getOriginal(board);
+          return board;
+        });
+      });
     }
   });
   return Promise.all(boardProms);
@@ -229,10 +229,10 @@ function selectBoard(board) {
   getAdmin(board);
   console.log("select board: " + board.name + "(" + board.xadmin.fullName + ")");
   var displayBoard = [{title: "Board", cards: [board.xabout]}], // organized by column...
-    dboards,
-    column = {"Board": 0},
-    table = $('<table "border="1">'),
-    row = $('<td>');
+      dboards,
+      column = {"Board": 0},
+      table = $('<table "border="1">'),
+      row = $('<td>');
 
   board.xcards.forEach(function (card) {
     if (card.name.match(/^Les/) || card.name.match(/^Opdracht/)) {
@@ -322,48 +322,70 @@ function selectOrganization() {
   if (idOrg !== 0) {
     promiseGet("organizations/" + idOrg + "/members")
       .then(function (mbrs) {
-        console.log("members: " + JSON.stringify(mbrs));
-        members = mbrs;
-        members.forEach(function (mbr) {
-          trelloObjects[mbr.id] = mbr;
-        });
-        return mbrs;
-      }).then(function () {
-        return promiseGet("members/me/boards");
-      }).then(function (boards) {
-        var newBoards = boards.map(function (brd, idx) {
-          if (trelloObjects[brd.id] === undefined) {
-            trelloObjects[brd.id] = brd; // register new board object
-            brd.xcards = [];
-            brd.xlists = [];
-            brd.xtype = 'board';
-          } else if (changedBoard(brd)) { // keep existing board object
-            brd.cards = [];
-            brd.xlists = [];
-            brd.xtype = 'board';
-          }
-          boardMap[idx] = trelloObjects[brd.id]; // @@@@
-          return trelloObjects[brd.id];
-        });
-        return newBoards.filter(function (brd, idx) {
-          return brd.idOrganization === idOrg;
-        });
-      }).then(getListsAndCards)
-      .then(function (boards) {
-        $("#boards").empty();
-        $("#boards").append("boards loaded");
-        var masterboards = boards.filter(function (brd) {
-          return (brd.xoriginal === brd);
-        });
-        dust.render("templ7", {boards: masterboards}, function (err, out) {
-          $("#masterboards").empty();
-          $("#masterboards").append(out);
-        });
-        makeMasterboardHandlers(masterboards);
-        saveObjects();
-        // alert("boards loaded" + JSON.stringify(boards));
+      console.log("members: " + JSON.stringify(mbrs));
+      members = mbrs;
+      members.forEach(function (mbr) {
+        trelloObjects[mbr.id] = mbr;
+        mbr.xtype = "member";
       });
+      return mbrs;
+    }).then(function (mbrs) {
+      return me.xboards.filter(function (brd) {
+        return brd.idOrganization === idOrg;
+      });
+    }).then(getListsAndCards)
+      .then(function (orgBoards) {
+      var masterboards = orgBoards.filter(function (brd) {
+        return (brd.xoriginal === brd);
+      });
+      dust.render("templ7", {boards: masterboards}, function (err, out) {
+        $("#masterboards").empty();
+        $("#masterboards").append(out);
+      });
+      makeMasterboardHandlers(masterboards);
+      saveObjects();
+      // alert("boards loaded" + JSON.stringify(boards));
+    });
   }
+}
+
+function removeCachedCards(cards) {
+  cards.forEach(function (crd) {
+    delete trelloObjects[crd.id];
+  });
+}
+
+function removeCachedLists(lists) {
+  lists.forEach(function (lst) {
+    delete trelloObjects[lst.id];
+  });
+}
+
+function getBoards(me) {
+  return promiseGet("members/me/boards")
+    .then(function (boards) {
+    var newBoards = boards.map(function (brd, idx) {
+      if (trelloObjects[brd.id] === undefined) {
+        trelloObjects[brd.id] = brd; // register new board object
+        brd.xcards = [];
+        brd.xlists = [];
+        brd.xtype = 'board';
+      } else if (changedBoard(brd)) {
+        var oldBoard = trelloObjects[brd.id];
+        if (oldBoard.xcards) {
+          removeCachedCards(oldBoard.xcards);
+          removeCachedLists(oldBoard.xlists);
+        }
+        trelloObjects[brd.id] = brd; // replace by new board object
+        brd.xcards = [];
+        brd.xlists = [];
+        brd.xtype = 'board';
+      }
+      me.xboards[idx] = trelloObjects[brd.id];
+      return trelloObjects[brd.id];
+    });
+    return newBoards;
+  });
 }
 
 function onAuthorize() {
@@ -381,34 +403,44 @@ function onAuthorize() {
 
   promiseMembersGet("me")
     .then(function (member) {
-      member.xtype = 'member';
-      trelloObjects[member.id] = member;
-      me = member;
-      return member;
-    }).then(function (myself) {
-      var orgGets = myself.idOrganizations.map(function (idOrg) {
-        if (trelloObjects[idOrg] !== undefined) {
-          console.log("restored: " + trelloObjects[idOrg].name);
-          return trelloObjects[idOrg];
-        } else {
-          return promiseGet("organizations/" + idOrg)
-            .then(function (org) {
-              org.xtype = "organization";
-              trelloObjects[org.id] = org;
-              return org;
-            });
-        }
-      });
-      return Promise.all(orgGets);
-    }).then(function (orgs) {
-      saveObjects();
-      // rendering:
-      $("#fullName").text(me.fullName);
-      console.log("organizations:" + JSON.stringify(orgs));
-      dust.render("templ4", {orgs: orgs}, function (err, out) {
-        $("#orgselector").append(out);
-      });
+    member.xtype = 'member';
+    trelloObjects[member.id] = member;
+    me = member;
+    me.xboards = [];
+    me.xorgs = [];
+    return member;
+  }).then(function (myself) {
+    var orgGets = myself.idOrganizations.map(function (idOrg) {
+      if (trelloObjects[idOrg] !== undefined) {
+        console.log("restored: " + trelloObjects[idOrg].name);
+        return trelloObjects[idOrg];
+      } else {
+        return promiseGet("organizations/" + idOrg)
+          .then(function (org) {
+          org.xtype = "organization";
+          trelloObjects[org.id] = org;
+          return org;
+        });
+      }
     });
+    return Promise.all(orgGets);
+  }).then(function (orgs) {
+    me.xorgs = orgs;
+    saveObjects();
+    // rendering:
+    $("#fullName").text(me.fullName);
+    console.log("organizations:" + JSON.stringify(orgs));
+    dust.render("templ4", {orgs: orgs}, function (err, out) {
+      $("#orgselector").append(out);
+    });
+    return me;
+  }).then(getBoards)
+  .then(function (brds) {
+    boardMap = brds;
+    me.xboards = brds;
+    $("#boards").empty();
+    $("#boards").append("my boards loaded");
+  });
 }
 
 function logout() {
@@ -428,13 +460,13 @@ Trello.authorize({
 
 $("#connectLink")
   .click(function () {
-    Trello.authorize({
-      type: "popup",
-      name: "ICTidW-test1",
-      expiration: "1hour",
-      success: onAuthorize
-    });
+  Trello.authorize({
+    type: "popup",
+    name: "ICTidW-test1",
+    expiration: "1hour",
+    success: onAuthorize
   });
+});
 
 $("#disconnect").click(logout);
 $("#orgselector").change(selectOrganization);
