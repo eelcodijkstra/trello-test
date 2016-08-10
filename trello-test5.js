@@ -57,11 +57,10 @@ function getBoardFromUrl(url) {
 
 function getOriginal(board) {
   var urlOrig = board.shortUrl,
-    match = "",
     rexp = /\[Original\]\(([^)]*)\)/;
   if (board.xabout) {
-    match = rexp.exec(board.xabout.desc);
-    if (match && match.length > 0) {
+    var match = rexp.exec(board.xabout.desc);
+    if (match && match.length > 1) {
       urlOrig = match[1];
     }
   }
@@ -349,19 +348,10 @@ function selectOrganization() {
         return newBoards.filter(function (brd, idx) {
           return brd.idOrganization === idOrg;
         });
-      }).then(function (orgBoards) {
-        dust.render("templ1", {boards: orgBoards}, function (err, out) {
-          $("#boards").empty();
-          $("#boards").append(out);
-        });
-        return orgBoards;
       }).then(getListsAndCards)
       .then(function (boards) {
-        dust.render("templ6", {boards: boards}, function (err, out) {
-          $("#boards").empty();
-          $("#boards").append(out);
-        });
-        makeBoardHandlers(boards);
+        $("#boards").empty();
+        $("#boards").append("boards loaded");
         var masterboards = boards.filter(function (brd) {
           return (brd.xoriginal === brd);
         });
