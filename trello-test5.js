@@ -350,11 +350,13 @@ function selectOrganization() {
         var masterboards = orgBoards.filter(function (brd) {
           return (brd.xoriginal === brd);
         });
+  /*
         dust.render("templ7", {boards: masterboards}, function (err, out) {
           $("#masterboards").empty();
           $("#masterboards").append(out);
         });
         makeMasterboardHandlers(masterboards);
+  */
         saveObjects();
         dust.render("templ5", {templboards: masterboards}, function (err, out) {
           $("#templselector").append(out);
@@ -464,13 +466,18 @@ function logout() {
   updateLoggedIn();
 }
 
+function onAuthorizeFailure() {
+  alert("Trello authorize failed");
+}
+
 Trello.setKey(trelloAppKey);
 
 Trello.authorize({
   interactive: false,
   expiration: "1hour",
   name: "ICTidW-test1",
-  success: onAuthorize
+  success: onAuthorize,
+  error: onAuthorizeFailure
 });
 
 $("#connectLink")
@@ -478,8 +485,12 @@ $("#connectLink")
     Trello.authorize({
       type: "popup",
       name: "ICTidW-test1",
+      scope: {
+        read: true
+      },
       expiration: "1hour",
-      success: onAuthorize
+      success: onAuthorize,
+      error: onAuthorizeFailure
     });
   });
 
