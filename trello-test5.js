@@ -358,11 +358,20 @@ function selectOrganization() {
         makeMasterboardHandlers(masterboards);
   */
         saveObjects();
+        $('#progressTable').empty();
+        $("#templselector").empty().append(
+          '<option value="0"> ...select a template ... </option>'
+        );
         dust.render("templ5", {templboards: masterboards}, function (err, out) {
           $("#templselector").append(out);
         });
         // alert("boards loaded" + JSON.stringify(boards));
       });
+  } else {
+    $('#progressTable').empty();
+    $("#templselector").empty().append(
+      '<option value="0"> ...select a template ... </option>'
+    );
   }
 }
 
